@@ -27,6 +27,7 @@ class ProductCatalogTemplate extends StatelessWidget {
               searchBar,
               const SizedBox(height: 16,),
               AppText(text: "Catalog", definedStyle: DefinedStyle.title),
+              const SizedBox(height: 8),
               Column(
                 children: productCard.isEmpty ? [SizedBox(height: 1,)] : productCard,
               ),
