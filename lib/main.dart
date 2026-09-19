@@ -1,4 +1,17 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchBar;
+import 'ui/atoms/app_button.dart';
+import 'ui/atoms/icon_button.dart';
+import 'ui/atoms/app_text.dart';
+import 'ui/atoms/product_icon.dart';
+import 'ui/molecules/price.dart';
+import 'ui/molecules/search_bar.dart';
+import 'ui/molecules/app_notification.dart';
+import 'ui/molecules/app_drop_down.dart';
+import 'ui/molecules/app_submit_btn.dart';
+import 'ui/organism/product_card.dart';
+import 'ui/molecules/app_appbar.dart';
+import 'ui/organism/product_form.dart';
+import './models/product.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,6 +41,10 @@ class MessyCatalogScreen extends StatefulWidget {
 }
 
 class _MessyCatalogScreenState extends State<MessyCatalogScreen> {
+  final List<Product> _mockProducts = [
+
+  ];
+
   final List<Map<String, dynamic>> _products = [
     {
       'id': 1,
@@ -80,6 +97,7 @@ class _MessyCatalogScreenState extends State<MessyCatalogScreen> {
     },
   ];
 
+
   String _searchQuery = '';
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -130,38 +148,44 @@ class _MessyCatalogScreenState extends State<MessyCatalogScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredProducts = _products.where((p) {
-      return p['name'].toString().toLowerCase().contains(_searchQuery.toLowerCase());
+    final filteredProducts = _products.where((product) {
+      return product['name'].toString().toLowerCase().contains(_searchQuery.toLowerCase());
     }).toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Messy Catalog',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        backgroundColor: Colors.indigo,
-      ),
+      appBar: CustomAppBar(title: "Messy Catalog",),
+      // appBar: AppBar(
+      //   title: const Text(
+      //     'Messy Catalog',
+      //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+      //   ),
+      //   backgroundColor: Colors.indigo,
+      // ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Search Products',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              onChanged: (value) {
+            // const Text(
+            //   'Search Products',
+            //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+            // ),
+            // const SizedBox(height: 8),
+            SearchBar(onChanged: (value) {
                 setState(() {
                   _searchQuery = value;
                 });
-              },
-              decoration: const InputDecoration(
-                hintText: 'Type a product name...',
-              ),
-            ),
+              },),
+            // TextField(
+            //   onChanged: (value) {
+            //     setState(() {
+            //       _searchQuery = value;
+            //     });
+            //   },
+            //   decoration: const InputDecoration(
+            //     hintText: 'Type a product name...',
+            //   ),
+            // ),
             const SizedBox(height: 16),
             const Text(
               'Catalog',
@@ -169,7 +193,12 @@ class _MessyCatalogScreenState extends State<MessyCatalogScreen> {
             ),
             const SizedBox(height: 8),
             Column(
-              children: filteredProducts.map((product) {
+              children: 
+              
+              filteredProducts.map((product) {
+                /* 
+                  HERE IS THE CARD
+                */
                 return Container(
                   margin: const EdgeInsets.only(bottom: 10),
                   padding: const EdgeInsets.all(12),
@@ -215,6 +244,7 @@ class _MessyCatalogScreenState extends State<MessyCatalogScreen> {
                               style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
                             ),
                             const SizedBox(height: 4),
+                            // PriceLabel(price: product['price']),
                             Text(
                               'PHP ${(product['price'] as double).toStringAsFixed(2)}',
                               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.indigo),
@@ -225,11 +255,15 @@ class _MessyCatalogScreenState extends State<MessyCatalogScreen> {
                       Column(
                         children: [
                           ElevatedButton(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Added ${product['name']} to cart')),
-                              );
+                            onPressed: 
+                            (){
+                              AppNotification.showNotification(context, 'Added ${product['name']} to cart');
                             },
+                            // () {
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     SnackBar(content: Text('Added ${product['name']} to cart')),
+                            //   );
+                            // },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.indigo,
                               foregroundColor: Colors.white,
@@ -252,12 +286,21 @@ class _MessyCatalogScreenState extends State<MessyCatalogScreen> {
                 );
               }).toList(),
             ),
+            ProductForm(
+              onSubmit: (setProduct){
+                setState(() {
+                  _searchQuery = '';
+                  _mockProducts.add(setProduct);
+                });
+              },
+            ),
             const Divider(height: 32, thickness: 1),
             const Text(
               'Add New Product',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
             ),
             const SizedBox(height: 12),
+            
             Form(
               key: _formKey,
               child: Column(
