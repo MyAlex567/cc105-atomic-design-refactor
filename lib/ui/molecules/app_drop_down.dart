@@ -20,7 +20,7 @@ class AppDropdownbtnfieldstr extends StatelessWidget {
     return DropdownButtonFormField<String>(
         initialValue: defaultValue,
         decoration: InputDecoration(labelText: label),
-        items: category.map((cat) => DropdownMenuItem(value: cat, child: AppText(text: cat, definedStyle: DefinedStyle.productName, bold: FontWeight.normal,))).toList(),
+        items: category.map((cat) => DropdownMenuItem(value: cat, child: AppText(text: cat, definedStyle: DefinedStyle.productName,))).toList(),
         onChanged: onChanged,
     );
   }

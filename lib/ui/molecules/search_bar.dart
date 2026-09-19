@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchBar;
 import '../atoms/app_text.dart';
 
 class SearchBar extends StatelessWidget {
