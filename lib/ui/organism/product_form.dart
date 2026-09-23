@@ -107,6 +107,7 @@ class _ProductFormState extends State<ProductForm> {
             onPressed: (){
               final setProduct = _validate();
               if(setProduct != null){
+                AppNotification.showNotification(context, '${_nameController.text} added to catalog', Colors.green);
                 widget.onSubmit(setProduct);
                 _nextId = _nextId + 1;
                 _nameController.clear();
